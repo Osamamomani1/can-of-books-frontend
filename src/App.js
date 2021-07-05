@@ -22,7 +22,7 @@ class App extends React.Component {
       <>
         <Router>
           
-          <IsLoadingAndError>
+          {/* <IsLoadingAndError> */}
             <Header />
             <Switch>
               <Route exact path="/">
@@ -38,7 +38,7 @@ class App extends React.Component {
               <Route path="/profile">{this.props.auth0.isAuthenticated && <Profile/> }</Route>
             </Switch>
             <Footer />
-          </IsLoadingAndError>
+          {/* </IsLoadingAndError> */}
         </Router>
       </>
     );
