@@ -15,33 +15,14 @@ class MyFavoriteBooks extends React.Component {
     });
   }
 
-  componentDidMount = async () => {
+  componentDidMount = async() => {
 
     let email=this.props.auth0.user.email
-    let axiosData = await axios.get(`http://localhost:8000/?email=${email}`).then(res=>{
-            console.log(res)
-        }).catch(err=>{console.log(err)})
-        console.log(axiosData);
-
-    if(this.props.auth0.isAuthenticated) {
-      this.props.auth0.getIdTokenClaims()
-      .then(res => {
-        const jwt = res.__raw;
-        const config = {
-          headers: {"Authorization" : `Bearer ${jwt}`},
-          method: 'get',
-          baseURL: process.env.REACT_APP_PORT,
-          url: '/authorize'
-        }
-        axios(config)
-          .then(axiosResults => console.log(axiosResults.data))
-          .catch(err => console.error(err));
-      })
-      .catch(err => console.error(err));
-
-      
-    }
-   
+    let axiosData= await axios.get(`http://localhost:8000/books/?email=${email}`)
+    this.setState({
+      resultsBook:axiosData.data.book
+    })
+    console.log(axiosData.data.book)
   }
   render() {
     return(

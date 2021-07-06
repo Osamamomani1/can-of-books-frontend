@@ -8,13 +8,34 @@ import {
   Route
 } from "react-router-dom";
 import { withAuth0 } from '@auth0/auth0-react';
-import LogoutButton from './LogoutButton';
+import axios from 'axios';
 import Profile from './Profile';
 import BestBooks from './BestBooks'
 import Login from './Login';
 
 
 class App extends React.Component {
+  componentDidMount = async () => {
+    if(this.props.auth0.isAuthenticated) {
+      this.props.auth0.getIdTokenClaims()
+      .then(res => {
+        const jwt = res.__raw;
+        const config = {
+          headers: {"Authorization" : `Bearer ${jwt}`},
+          method: 'get',
+          baseURL: process.env.REACT_APP_PORT,
+          url: '/authorize'
+        }
+        axios(config)
+          .then(axiosResults => console.log(axiosResults.data))
+          .catch(err => console.error(err));
+      })
+      .catch(err => console.error(err));
+
+      
+    }
+   
+  }
 
   render() {
     console.log('app', this.props.auth0);
@@ -22,7 +43,7 @@ class App extends React.Component {
       <>
         <Router>
           
-          {/* <IsLoadingAndError> */}
+          <IsLoadingAndError>
             <Header />
             <Switch>
               <Route exact path="/">
@@ -38,7 +59,7 @@ class App extends React.Component {
               <Route path="/profile">{this.props.auth0.isAuthenticated && <Profile/> }</Route>
             </Switch>
             <Footer />
-          {/* </IsLoadingAndError> */}
+          </IsLoadingAndError>
         </Router>
       </>
     );
